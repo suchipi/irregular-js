@@ -37,20 +37,28 @@ new IrRegExp(pattern[, flags][, methods])
 ```
 ##### Parameters
 `regExp`
+
   A native regular expression object. (RegExp)
+  
   Example: `/\$100/gm`
 
 `pattern`
+
   The text of a regular expression object, the same as you would put in a `new RegExp(pattern[, flags])` constructor. (String)
+
   Example: `"\\$100"`
 
 `flags`
+
   The flags of a regular expression object, the same as you would put in a `new RegExp(pattern[, flags])` constructor. (String)
+
   If you provide a regExp and flags, the flags String will override the flags in the regExp object.
   Example: `'gm'`
 
 `methods`
+
   An Object containing methods to be used by the Irregular Expression. (Object<String, Function>)
+
   Each function should return a String representing a portion of a regular expression pattern.
   Example:
   ```javascript
@@ -98,7 +106,7 @@ friends.push('george');
 irRegExp.compile().test('george'); // => true
 ```
 
-Because the methods of an IrRegExp are re-evaluated at compile-time, you can create methods that rely on other values and then just recompile your irRegExp instance to update them.
+Because the methods of an IrRegExp are re-evaluated at compile-time, you can create methods that rely on other values and then just recompile your IrRegExp instance to update them.
 
 ## TODO
 
