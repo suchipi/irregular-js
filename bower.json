@@ -1,0 +1,24 @@
+{
+  "name": "irregular",
+  "homepage": "https://github.com/suchipi/irregular-js",
+  "authors": [
+    "Stephen Scott <me@suchipi.com>"
+  ],
+  "description": "Abstracted, human-readable regular expressions",
+  "main": "irregular.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "regular",
+    "expressions",
+    "abstract",
+    "irregular",
+    "dynamic"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "irregular-tests.js",
+    "package.js"
+  ]
+}
