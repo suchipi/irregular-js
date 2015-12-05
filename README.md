@@ -24,6 +24,10 @@ Regular expressions are very powerful, but their syntax can get large and archai
 
 ```
 
+## Installation
+* Bower: `bower install --save irregular`
+* Meteor: `meteor add suchipi:irregular`
+
 ## API
 
 ### IrRegExp
