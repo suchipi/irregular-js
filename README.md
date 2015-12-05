@@ -8,7 +8,7 @@ Regular expressions are very powerful, but their syntax can get large and archai
   var methods = {
     catNames: function() {
       // Return a string chunk that will be included in the regular expression.
-      return '(' + ['betty', joyce', 'franklin', 'peter'].join('|') + ')';
+      return '(' + ['betty', 'joyce', 'franklin', 'peter'].join('|') + ')';
     }
   }
 
