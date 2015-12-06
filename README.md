@@ -111,6 +111,7 @@ irRegExp.match(string)
 ```
 
 Function that returns the matches of the IrRegExp instance. (Returns Object&lt;String, Array&lt;String&gt;&gt;)
+
 Format of the returned object is:
 ```
 {
