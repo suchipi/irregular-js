@@ -40,6 +40,9 @@ IrRegExp = function() {
 };
 
 IrRegExp.prototype._getFlags = function(regExp) {
+  if (regExp.flags) {
+    return regExp.flags;
+  }
   var list = [];
   if (regExp.global) list.push('g');
   if (regExp.ignoreCase) list.push('i');
@@ -58,12 +61,55 @@ IrRegExp.prototype.compile = function(providedMethods) {
   var compiledSource = self.source;
   var methods = providedMethods || self.methods || {};
 
+  // strip out named capture groups by converting them into normal capture groups
+  compiledSource = compiledSource.replace(/\(\?(?:<|')\w+(?:>|')([^)]*)\)/g, "($1)");
+
   Object.keys(methods).forEach(function(method){
-    compiledSource = self.source.replace(/`(\w+)`/g, function(match, $1, offset){
+    compiledSource = compiledSource.replace(/`(\w+)`/g, function(match, $1, offset){
       var func = methods[$1] || function(){return match};
       return func();
     });
   });
 
   return new RegExp(compiledSource, self.flags);
+};
+
+IrRegExp.prototype.match = function(matchString) {
+  var self = this;
+
+  // Collect capture group names
+  var matchNames = [];
+  self.source.replace(/\([^)]*\)/g, function(match, offset){
+    var namedMatchMatches = /\(\?(?:<|')(\w+)(?:>|')[^)]*\)/g.exec(match);
+    if (namedMatchMatches) {
+      matchNames.push(namedMatchMatches[1]);
+    } else {
+      // Unnamed capture group; you can get it via number, though.
+      matchNames.push(matchNames.length + 1);
+    }
+  });
+
+  // Collect match results. exec global regExps until they're all done.
+  var regExp = self.compile();
+  var matchResults = [];
+  if (regExp.global) {
+    while(regExp.lastIndex < matchString.length) {
+      var matches = regExp.exec(matchString);
+      if (matches) matchResults.push(matches);
+    }
+  } else {
+    var matches = regExp.exec(matchString);
+    if (matches) matchResults.push(matches);
+  }
+
+  // populate matches from matchResults into a map.
+  // keys are matching group names, values are arrays of matches.
+  var matchMap = {};
+  matchResults.forEach(function(matches){
+    matchNames.forEach(function(name, index){
+      if (!matchMap[name]) matchMap[name] = [];
+      matchMap[name].push(matches[index + 1]);
+    });
+  });
+  return matchMap;
 };

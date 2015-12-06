@@ -1,11 +1,17 @@
 # Irregular.js
 
-Regular expressions are very powerful, but their syntax can get large and archaic quickly. Irregular is a simple templating language for regular expressions. It helps you abstract chunks of your regular expressions into functions to help make them more readable. 
+Regular expressions are very powerful, but they can get large and archaic quickly. Irregular provides tools that work together to help you abstract your regular expressions into human-readable code.
+
+Irregular comes with:
+* A templating language for Regular Expressions that helps you abstract each chunk into a human-readable string
+* Support for named capture groups (.NET syntax: `(?<name>pattern)` or `(?'name'pattern)`)
+* A convenient method to retrieve all matches from an IrRegExp (no more while loops!)
 
 There is also a Ruby implementation: [irregular-rb](https://github.com/suchipi/irregular-rb)
 
 ## Usage Example
 
+### Templating
 ```javascript
   var methods = {
     catNames: function() {
@@ -25,6 +31,20 @@ There is also a Ruby implementation: [irregular-rb](https://github.com/suchipi/i
   console.log(regExp.test("I love my cat Joyce!")); // => true
 
 ```
+
+### Match Retrieval
+```javascript
+  var irRegExp = new IrRegExp(/(\w+)/g);
+  var matches = irRegExp.match("This is a test");
+  console.log(matches); // => { '1': ["This", "is", "a", "test"] }
+  console.log(matches[1][0]); // => "This"
+
+  var namedIrRegExp = new IrRegExp('(?<firstName>\\w+) (?<lastName>\\w+)'); // IrRegExp supports named matches!
+  var matches = irRegExp.match("John Smith");
+  console.log(matches); // => { firstName: ["John"], lastName: ["Smith"] }
+```
+
+Templating and Match Retrieval can be used together.
 
 ## Installation
 * Bower: `bower install --save irregular`
@@ -63,7 +83,7 @@ new IrRegExp(pattern[, flags][, methods])
 
 `methods`
 
-  An Object containing methods to be used by the Irregular Expression. (Object<String, Function>)
+  An Object containing methods to be used by the Irregular Expression. (Object&lt;String, Function&gt;)
 
   Each function should return a String representing a portion of a regular expression pattern.
   Example:
@@ -81,7 +101,22 @@ irRegExp.compile([methods])
 ```
 
 Function that compiles the IrRegExp instance into a RegExp. (Returns RegExp)
+
 Takes an optional methods parameter to use instead of the instance's methods. 
+If the IrRegExp being compiled contains named capture groups, they will be converted into unnamed capture groups.
+
+### IrRegExp.prototype.match
+```
+irRegExp.match(string)
+```
+
+Function that returns the matches of the IrRegExp instance. (Returns Object&lt;String, Array&lt;String&gt;&gt;)
+Format of the returned object is:
+```
+{
+  <captureGroupNameOrNumber>: [<matches>]
+}
+```
 
 ### IrRegExp.prototype.flags
 
@@ -117,7 +152,6 @@ Because the methods of an IrRegExp are re-evaluated at compile-time, you can cre
 ## TODO
 
 * Ability to escape backtick character with backslash
-* Named capture groups that get returned as an Object
 * Mirror RegExp prototype API to IrRegExp?
 
 ## Contributing

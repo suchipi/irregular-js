@@ -13,8 +13,8 @@ Tinytest.add('An IrRegExp can be constructed without arguments, but not compiled
 });
 
 var methods = {
-  test1: function(){ return "result1"; },
-  test2: function(){ return "result2"; }
+  test1: () => "result1",
+  test2: () => "result2"
 };
 
 Tinytest.add('An IrRegExp can be constructed with a RegExp', function(test) {
@@ -95,4 +95,57 @@ Tinytest.add('Trying to compile a non-existent method does nothing', function(te
   test.isUndefined(methods.foo);
   var regExp = new IrRegExp(/bla `foo`/, methods).compile();
   test.equal(regExp.source, "bla `foo`");
+});
+
+Tinytest.add('IrRegExp.prototype.compile converts named capture groups into unnamed ones', function(test) {
+  var regExp = new IrRegExp('(?<foo>bar)').compile();
+  test.equal(regExp.source, "(bar)");
+
+  var regExp = new IrRegExp('(?\'foo\'bar)').compile();
+  test.equal(regExp.source, "(bar)");
+});
+
+Tinytest.add('IrRegExp.prototype.match returns matches', function(test) {
+  var irRegExp = new IrRegExp(/(\w+) (\w+)/);
+  matches = irRegExp.match('John Smith');
+  test.equal(matches[1][0], 'John');
+  test.equal(matches[2][0], 'Smith');
+});
+
+Tinytest.add('IrRegExp.prototype.match returns named matches', function(test) {
+  var irRegExp = new IrRegExp('(?<firstName>\\w+) (?\'lastName\'\\w+)');
+  matches = irRegExp.match('John Smith');
+  test.equal(matches.firstName[0], 'John');
+  test.equal(matches.lastName[0], 'Smith');
+});
+
+Tinytest.add('IrRegExp.prototype.match works with both named and unnamed matching groups', function(test) {
+  var irRegExp = new IrRegExp('(?<firstName>\\w+) (\\w+) (?<lastName>\\w+)');
+  matches = irRegExp.match('John R Smith');
+  test.equal(matches.firstName[0], 'John');
+  test.equal(matches[2][0], 'R');
+  test.equal(matches.lastName[0], 'Smith');
+});
+
+Tinytest.add('IrRegExp.prototype.match aggregates duplicate-named match results to the same key', function(test) {
+  var irRegExp = new IrRegExp('(?<namePart>\\w+) (?<namePart>\\w+)');
+  matches = irRegExp.match('John Smith');
+  test.equal(matches.namePart[0], 'John');
+  test.equal(matches.namePart[1], 'Smith');
+});
+
+Tinytest.add('IrRegExp.prototype.match aggregates multiple unnamed matches of the same group to the same key when using a global regexp', function(test) {
+  var irRegExp = new IrRegExp(/(\w+)/g);
+  matches = irRegExp.match('John R Smith'); // calls exec multiple times since the regex is global
+  test.equal(matches[1][0], 'John');
+  test.equal(matches[1][1], 'R');
+  test.equal(matches[1][2], 'Smith');
+});
+
+Tinytest.add('IrRegExp.prototype.match aggregates multiple named matches of the same group to the same key when using a global regexp', function(test) {
+  var irRegExp = new IrRegExp('(?<namePart>\\w+) ?', 'g');
+  matches = irRegExp.match('John R Smith'); // calls exec multiple times since the regex is global
+  test.equal(matches.namePart[0], 'John');
+  test.equal(matches.namePart[1], 'R');
+  test.equal(matches.namePart[2], 'Smith');
 });
