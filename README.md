@@ -2,6 +2,8 @@
 
 Regular expressions are very powerful, but their syntax can get large and archaic quickly. Irregular is a simple templating language for regular expressions. It helps you abstract chunks of your regular expressions into functions to help make them more readable. 
 
+There is also a Ruby implementation: [irregular-rb](https://github.com/suchipi/irregular-rb)
+
 ## Usage Example
 
 ```javascript
