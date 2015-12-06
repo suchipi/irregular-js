@@ -92,6 +92,7 @@ Tinytest.add('IrRegExp.prototype.compile returns a compiled RegExp', function(te
 });
 
 Tinytest.add('Trying to compile a non-existent method does nothing', function(test) {
-  var regExp = new IrRegExp(/bla `foo`/, {}).compile();
+  test.isUndefined(methods.foo);
+  var regExp = new IrRegExp(/bla `foo`/, methods).compile();
   test.equal(regExp.source, "bla `foo`");
 });

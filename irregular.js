@@ -60,7 +60,7 @@ IrRegExp.prototype.compile = function(providedMethods) {
 
   Object.keys(methods).forEach(function(method){
     compiledSource = self.source.replace(/`(\w+)`/g, function(match, $1, offset){
-      var func = methods[$1] || function(){return ""};
+      var func = methods[$1] || function(){return match};
       return func();
     });
   });
