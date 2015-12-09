@@ -95,7 +95,11 @@ IrRegExp.prototype.match = function(matchString) {
   if (regExp.global) {
     while(regExp.lastIndex < matchString.length) {
       var matches = regExp.exec(matchString);
-      if (matches) matchResults.push(matches);
+      if (matches) {
+        matchResults.push(matches);
+      } else {
+        break;
+      }
     }
   } else {
     var matches = regExp.exec(matchString);

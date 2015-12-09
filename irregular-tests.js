@@ -115,6 +115,12 @@ Tinytest.add('IrRegExp.prototype.compile converts named capture groups within me
   test.equal(regExp.source, "(bar) (bar)");
 });
 
+Tinytest.add('IrRegExp.prototype.match returns an empty object when there are no matches', function(test) {
+  var irRegExp = new IrRegExp(/asdfjksdlfjkld/g);
+  matches = irRegExp.match('John Smith');
+  test.equal(Object.keys(matches).length, 0);
+});
+
 Tinytest.add('IrRegExp.prototype.match returns matches', function(test) {
   var irRegExp = new IrRegExp(/(\w+) (\w+)/);
   matches = irRegExp.match('John Smith');
