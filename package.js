@@ -1,6 +1,6 @@
 Package.describe({
   name: 'suchipi:irregular',
-  version: '1.1.1',
+  version: '1.1.2',
   summary: 'Abstracted, human-readable regular expressions',
   git: 'http://github.com/suchipi/irregular-js',
   documentation: 'README.md'
