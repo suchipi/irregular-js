@@ -105,6 +105,16 @@ Tinytest.add('IrRegExp.prototype.compile converts named capture groups into unna
   test.equal(regExp.source, "(bar)");
 });
 
+Tinytest.add('IrRegExp.prototype.compile converts named capture groups within methods into unnamed ones', function(test) {
+  methods = {
+    foo: () => "(?<foo>bar)",
+    foo2: () => "(?'foo2'bar)"
+  }
+
+  var regExp = new IrRegExp('`foo` `foo2`', methods).compile();
+  test.equal(regExp.source, "(bar) (bar)");
+});
+
 Tinytest.add('IrRegExp.prototype.match returns matches', function(test) {
   var irRegExp = new IrRegExp(/(\w+) (\w+)/);
   matches = irRegExp.match('John Smith');

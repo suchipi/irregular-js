@@ -61,15 +61,15 @@ IrRegExp.prototype.compile = function(providedMethods) {
   var compiledSource = self.source;
   var methods = providedMethods || self.methods || {};
 
-  // strip out named capture groups by converting them into normal capture groups
-  compiledSource = compiledSource.replace(/\(\?(?:<|')\w+(?:>|')([^)]*)\)/g, "($1)");
-
   Object.keys(methods).forEach(function(method){
     compiledSource = compiledSource.replace(/`(\w+)`/g, function(match, $1, offset){
       var func = methods[$1] || function(){return match};
       return func();
     });
   });
+
+  // strip out named capture groups by converting them into normal capture groups
+  compiledSource = compiledSource.replace(/\(\?(?:<|')\w+(?:>|')([^)]*)\)/g, "($1)");
 
   return new RegExp(compiledSource, self.flags);
 };
